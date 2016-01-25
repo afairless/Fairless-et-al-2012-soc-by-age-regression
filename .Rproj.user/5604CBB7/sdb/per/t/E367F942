@@ -1,0 +1,16 @@
+{
+    "contents" : "# Andrew Fairless, December 2010, February 2011\n# modified May 2015 for posting onto Github\n# This script executes regression analyses for Fairless et al 2012\n# Fairless et al 2012, doi: 10.1016/j.bbr.2011.12.001, PMID:  22178318, PMCID:  PMC3474345\n\n# The fictional data in \"altereddata.txt\" were modified from the original \n# empirical data used in Fairless et al 2012.\n# I am using fictional data instead of the original data because I do not have \n# permission of my co-authors to release the data into the public domain.  \n# NOTE:  Because these data are fictional, several important characteristics of\n# these data may be different from those of the original data.\n\n# Each row is a separate mouse.\n# The left-most 3 columns are quasi-independent variables (mouse strain, sex, and age).\n# The right-most 5 columns are dependent variables describing behaviors of the\n# mice during the Social Approach/Choice Test.\n\ndata = read.table(\"altereddata.txt\", header = TRUE)      \n\ndatasplit = split(data,data[ , 1])\nbalb = datasplit[[1]]\nb6 = datasplit[[2]]\n\n# conventional OLS regression\n\nsink(file = \"conventionalOLSregression.txt\")\n\nprint(\"conventional OLS regression for BALB/cJ mice\")\nlm.soc.3rd5min = lm(soc.3rd5min~age+sex, data = balb)\nsummary(lm.soc.3rd5min)\n\nprint(\"conventional OLS regression for C57BL/6J mice\")\nlm.soc.3rd5min = lm(soc.3rd5min~age+sex, data = b6)\nsummary(lm.soc.3rd5min)\n\nsink(file = NULL)\n\n\n# robust OP regression\n\nsource(\"Rallfun-v13.txt\")\n\nsink(file = \"robustOPregression.txt\")\n\ndata = balb\nprint(\"robust OP regression for BALB/cJ mice\")\n# regression line, coefficients\nopreg(cbind(data$age, as.numeric(data$sex)), data$soc.3rd5min)\n# t-test for significance\nregtest(cbind(data$age, as.numeric(data$sex)), data$soc.3rd5min, regfun = opreg, \n        nboot = 1000, plotit = TRUE, grp = c(1))\n\ndata = b6\nprint(\"robust OP regression for C57BL/6J mice\")\n# regression line, coefficients\nopreg(cbind(data$age, as.numeric(data$sex)), data$soc.3rd5min)\n# t-test for significance\nregtest(cbind(data$age, as.numeric(data$sex)), data$soc.3rd5min, regfun = opreg, \n        nboot = 1000, plotit = TRUE, grp = c(1))\n\nsink(file = NULL)\n",
+    "created" : 1452016247402.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3280221329",
+    "id" : "E367F942",
+    "lastKnownWriteTime" : 1433032791,
+    "path" : "~/Link to backup/2015 code share/Fairless et al 2012 soc by age regression/to share/revising.R",
+    "project_path" : "revising.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
